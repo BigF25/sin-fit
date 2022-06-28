@@ -22,7 +22,7 @@ W2 = np.random.random((hidesize1, hidesize2))
 B2 = np.random.random((hidesize2, 1))
 W3 = np.random.random((1, hidesize2))
 B3 = np.random.random((1, 1))
-yita = 1
+yita = 0.1
 loop = 5000  # 5000
 Y_predict = np.zeros(datasize)
 LOOP = []
@@ -33,9 +33,9 @@ for loopi in range(loop):
         x = X[i]
         Z1 = W1*x + B1
         A1 = sigmoid(Z1)
-        Z2 = W2*A1 + B2
+        Z2 = np.dot(W2,A1) + B2
         A2 = sigmoid(Z2)
-        Z3 = W3*A2 + B3
+        Z3 = np.dot(W3,A2) + B3
         Y_predict[i] = Z3[0, 0]
         e = Y[i] - Y_predict[i]
 
