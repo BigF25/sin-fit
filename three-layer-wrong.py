@@ -11,7 +11,7 @@ def sigmoid(x):
 
 
 '''creat data set'''
-X = np.arange(-1*math.pi, 1*math.pi, 0.006)  # 0.006
+X = np.arange(-1*math.pi, 1*math.pi, 0.06)  # 0.006
 Y = np.sin(X)
 datasize = np.size(X)
 '''creat hide parameter array'''
@@ -29,12 +29,14 @@ W2_best = np.copy(W2)
 B2_best = np.copy(B2)
 W3_best = np.copy(W3)
 B3_best = np.copy(B3)
+'''creat other parameter'''
 tempsume_min = 100
 yita = 0.2
 loop = 5000 # 5000
 Y_hat = np.zeros(datasize)
 LOOP = []
 E = []
+'''start train'''
 for loopi in range(loop):
     tempsume = 0
     for i in range(datasize):
@@ -47,28 +49,6 @@ for loopi in range(loop):
         Z3 = np.dot(W3, A2) + B3
         Y_hat[i] = Z3[0, 0]
         e = Y[i] - Y_hat[i]
-
-
-        X2 = np.arange(-1*math.pi, 1*math.pi, 0.1) 
-        Y2 = np.sin(X2)
-        size2 = np.size(X2)
-        Y_predict = np.zeros(size2)
-        for j in range(size2):
-            x2 = X2[j]
-            Z1 = W1*x2 + B1
-            A1 = sigmoid(Z1)
-            Z2 = np.dot(W2,A1) + B2
-            A2 = sigmoid(Z2)
-            Z3 = np.dot(W3,A2) + B3
-            Y_predict[j] = Z3[0, 0]
-        ax = plt.subplot(2, 2, 1)
-        plt.sca(ax)
-        plt.plot(X2, Y2, '.')
-        plt.plot(X2, Y_predict, '.')
-        plt.pause(0.01)  # 暂停0.01秒
-        plt.cla()
-        plt.ioff()  # 关闭画图的窗口
-
         '''backword propagation'''
         dB3 = -1
         dW3 = -1*A2.T
@@ -82,9 +62,28 @@ for loopi in range(loop):
         W2 = W2-dW2*yita*e
         B1 = B1-dB1*yita*e
         W1 = W1-dW1*yita*e
-
+        '''conut cost'''
         tempsume = tempsume + abs(e)
-
+        '''validate the model'''
+        X2 = np.arange(-1*math.pi, 1*math.pi, 0.1) 
+        Y2 = np.sin(X2)
+        size2 = np.size(X2)
+        Y_predict = np.zeros(size2)
+        for j in range(size2):
+            x2 = X2[j]
+            Z1 = W1*x2 + B1
+            A1 = sigmoid(Z1)
+            Z2 = np.dot(W2,A1) + B2
+            A2 = sigmoid(Z2)
+            Z3 = np.dot(W3,A2) + B3
+            Y_predict[j] = Z3[0, 0]
+        ax1 = plt.subplot(2, 2, 1)
+        plt.sca(ax1)
+        plt.plot(X2, Y2, '.')
+        plt.plot(X2, Y_predict, '.')
+        plt.pause(0.01)  # 暂停0.01秒
+        plt.cla()
+        plt.ioff()  # 关闭画图的窗口
     '''save the best model'''
     if tempsume < tempsume_min:
         tempsume_min = tempsume
@@ -102,11 +101,11 @@ for loopi in range(loop):
     '''show message'''
     LOOP.append(loopi)
     E.append(tempsume)
-    ax1 = plt.subplot(2, 2, 3)
-    ax2 = plt.subplot(2, 2, 4)
-    plt.sca(ax1)
-    plt.plot(LOOP, E, color='black')
+    ax2 = plt.subplot(2, 2, 3)
+    ax3 = plt.subplot(2, 2, 4)
     plt.sca(ax2)
+    plt.plot(LOOP, E, color='black')
+    plt.sca(ax3)
     plt.plot(X, Y, linewidth=5)
     plt.plot(X, Y_hat, linewidth=3, linestyle='--')
     plt.pause(0.01)  # 暂停0.01秒
@@ -121,21 +120,3 @@ for loopi in range(loop):
 # print("W3_best", W3_best)
 # print("B3_best", B3_best)
 
-
-'''predict'''
-# X2 = np.arange(-1*math.pi, 1*math.pi, 0.006) 
-# # X = X*2*math.pi-math.pi
-# Y2 = np.sin(X2)
-# size2 = np.size(X2)
-# Y_predict = np.zeros(size2)
-# for i in range(size2):
-#     x = X2[i]
-#     Z1 = W1_best*x + B1_best
-#     A1 = sigmoid(Z1)
-#     Z2 = np.dot(W2_best,A1) + B2_best
-#     A2 = sigmoid(Z2)
-#     Z3 = np.dot(W3_best,A2) + B3_best
-#     Y_predict[i] = Z3[0, 0]
-# plt.plot(X2, Y2, '.')
-# plt.plot(X2, Y_predict, '.')
-# plt.show()
